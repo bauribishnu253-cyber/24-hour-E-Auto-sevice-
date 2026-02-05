@@ -153,18 +153,34 @@
     }  
 
     input, select {  
-        background: rgba(255, 255, 255, 0.05);  
-        border: 1px solid var(--glass-border);  
-        padding: 12px 15px;  
-        border-radius: 8px;  
-        color: white;  
-        outline: none;  
-        transition: border 0.3s;  
-    }  
+    background: rgba(255, 255, 255, 0.07);  
+    border: 1px solid var(--glass-border);  
+    padding: 14px 15px;  
+    border-radius: 12px; /* একটু বেশি রাউন্ড লুকের জন্য */
+    color: white;  
+    outline: none;  
+    transition: all 0.3s ease;  
+    font-size: 0.95rem;
+    width: 100%;
+}  
 
-    input:focus {  
-        border-color: var(--primary);  
-    }  
+/* ডেট-টাইম এবং সিলেক্ট বক্সের বিশেষ স্টাইল */
+input[type="datetime-local"] {
+    cursor: pointer;
+}
+
+/* ক্যালেন্ডার আইকনটি সুন্দর করার জন্য */
+::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(0.8) sepia(1) saturate(5) hue-rotate(10deg);
+    cursor: pointer;
+}
+
+input:focus, select:focus {  
+    border-color: var(--primary);
+    background: rgba(241, 196, 15, 0.05);
+    box-shadow: 0 0 10px rgba(241, 196, 15, 0.1);
+}
+  
 
     .location-btn {  
         background: transparent;  
@@ -447,3 +463,4 @@ window.location.href = waUrl;
 </body>  
 
 </html>  
+
