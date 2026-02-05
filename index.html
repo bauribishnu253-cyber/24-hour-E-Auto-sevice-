@@ -394,78 +394,71 @@ input:focus, select:focus {
     dtInput.max = maxDate.toISOString().slice(0, 16);  
 
     // Geolocation  
-    function getLocation() {  
+        function getLocation() {  
+        const btn = document.querySelector('.location-btn');  
+        btn.innerHTML = 'Capturing...';  
+        
         if (navigator.geolocation) {  
-        navigator.geolocation.getCurrentPosition((pos) => {  
-            const lat = pos.coords.latitude;
-            const lon = pos.coords.longitude;
-            // ম্যাপের জন্য গুগল ম্যাপ লিংক তৈরি করা
-            const mapUrl = `https://www.google.com/maps?q=${lat},${lon}`;
-            document.getElementById('coords').value = mapUrl; 
-            document.getElementById('pickup').value = `Location Captured (${lat.toFixed(4)}, ${lon.toFixed(4)})`;  
-            alert("Location captured successfully!");  
-        }, () => {  
-            alert("Unable to retrieve location. Please type address manually.");  
-        }, { enableHighAccuracy: true });  
-    }  
-}
-  
-
-    // Form Submit  
-    const bookingForm = document.getElementById('bookingForm');  
-    bookingForm.addEventListener('submit', (e) => {  
-        e.preventDefault();  
-        document.getElementById('distanceModal').style.display = 'flex';  
-    });  
-
-    function handleDistance(isLongDist) {  
-        const modal = document.getElementById('distanceModal');  
-        if (isLongDist) {  
-            modal.style.display = 'none';  
-            document.getElementById('payment-section').style.display = 'block';  
-            document.getElementById('payment-section').scrollIntoView();  
-            bookingForm.style.opacity = '0.5';  
-            bookingForm.style.pointerEvents = 'none';  
+            navigator.geolocation.getCurrentPosition((pos) => {  
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                // সঠিক ম্যাপ লিঙ্ক ফরম্যাট
+                const mapUrl = `https://www.google.com/maps?q=${lat},${lon}`;
+                document.getElementById('coords').value = mapUrl; 
+                document.getElementById('pickup').value = `Location Captured (${lat.toFixed(4)}, ${lon.toFixed(4)})`;  
+                btn.innerHTML = '📍 Location Captured';
+                alert("Location captured successfully!");  
+            }, (err) => {  
+                alert("Location access denied. Please enable GPS and allow permission.");  
+                btn.innerHTML = '📍 Get My Current Location';
+            });  
         } else {  
-            alert("Advance booking is only available for trips above 4.5 KM.");  
-            modal.style.display = 'none';  
+            alert("Geolocation is not supported by this browser.");  
         }  
     }  
 
-    // এই নতুন কোডটি বসান
-const rawDate = document.getElementById('datetime').value; // ইনপুট থেকে ডেট নিচ্ছি
-const formattedDate = rawDate.replace('T', ' '); // 'T' সরিয়ে স্পেস বসাচ্ছি যাতে সুন্দর দেখায়
+    function finalSubmit() {  
+        const txnId = document.getElementById('txnId').value;  
+        if (txnId.length !== 12 || isNaN(txnId)) {  
+            alert("Please enter a valid 12-digit Transaction ID.");  
+            return;  
+        }  
 
-const data = {  
-    name: document.getElementById('name').value,  
-    mobile: document.getElementById('mobile').value,  
-    pickup: document.getElementById('pickup').value,  
-    destination: document.getElementById('destination').value,  
-    passengers: document.getElementById('passengers').value,  
-    datetime: formattedDate, // ফরম্যাট করা ডেট ব্যবহার করছি
-    txn: txnId  
-};  
+        const coords = document.getElementById('coords').value; 
+        const rawDate = document.getElementById('datetime').value;
+        const formattedDate = rawDate ? rawDate.replace('T', ' ') : 'Not Selected';
 
-// মেসেজ ফরম্যাট আপডেট
-const message = `*Smart Jatra* 🛺 *New Booking*\n\n` +
-                `👤 *Name:* ${data.name}\n` +
-                `📞 *Mobile:* ${data.mobile}\n` +
-                `📍 *Pickup:* ${data.pickup}\n` +
-                `🗺️ *GPS:* ${coords || 'Manual Entry'}\n` +
-                `🏁 *Destination:* ${data.destination}\n` +
-                `👥 *Passengers:* ${data.passengers}\n` +
-                `📅 *Date & Time:* ${data.datetime}\n` +
-                `💳 *Txn ID:* ${data.txn}\n\n` +
-                `✅ *Note:* Distance confirmed > 4.5 KM`;
+        const data = {  
+            name: document.getElementById('name').value,  
+            mobile: document.getElementById('mobile').value,  
+            pickup: document.getElementById('pickup').value,  
+            destination: document.getElementById('destination').value,  
+            passengers: document.getElementById('passengers').value,  
+            datetime: formattedDate,  
+            txn: txnId  
+        };  
 
-         // WhatsApp Trigger (PRIMARY & ONLY)
-const waUrl = `https://wa.me/917478578232?text=${encodeURIComponent(message)}`;
-window.location.href = waUrl;
-    }  
+        // হোয়াটসঅ্যাপ মেসেজ ফরম্যাট
+        const message = `*Smart Jatra* 🛺 *New Booking*\n\n` +
+                        `👤 *Name:* ${data.name}\n` +
+                        `📞 *Mobile:* ${data.mobile}\n` +
+                        `📍 *Pickup:* ${data.pickup}\n` +
+                        `🗺️ *GPS:* ${coords || 'Manual Entry'}\n` +
+                        `🏁 *Destination:* ${data.destination}\n` +
+                        `👥 *Passengers:* ${data.passengers}\n` +
+                        `📅 *Date & Time:* ${data.datetime}\n` +
+                        `💳 *Txn ID:* ${data.txn}\n\n` +
+                        `✅ *Note:* Distance confirmed > 4.5 KM`;
+
+        const waUrl = `https://wa.me/917478578232?text=${encodeURIComponent(message)}`;
+        window.location.href = waUrl;
+    }
+  
 </script>
 
 </body>  
 
 </html>  
+
 
 
