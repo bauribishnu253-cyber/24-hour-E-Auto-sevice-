@@ -418,47 +418,52 @@ input:focus, select:focus {
     }  
 
     function finalSubmit() {  
-        const txnId = document.getElementById('txnId').value;  
-        if (txnId.length !== 12 || isNaN(txnId)) {  
-            alert("Please enter a valid 12-digit Transaction ID.");  
-            return;  
-        }  
+    const txnId = document.getElementById('txnId').value;  
+    if (txnId.length !== 12 || isNaN(txnId)) {  
+        alert("Please enter a valid 12-digit Transaction ID.");  
+        return;  
+    }  
 
-        const coords = document.getElementById('coords').value; 
-        const rawDate = document.getElementById('datetime').value;
-        const formattedDate = rawDate ? rawDate.replace('T', ' ') : 'Not Selected';
+    const coords = document.getElementById('coords').value; 
+    
+    // ডেট এবং টাইম ফরম্যাট ঠিক করা
+    const rawDateTime = document.getElementById('datetime').value;
+    const formattedDateTime = rawDateTime.replace('T', ' '); // 'T' সরিয়ে স্পেস দেওয়া হলো যাতে পড়তে সুবিধা হয়
 
-        const data = {  
-            name: document.getElementById('name').value,  
-            mobile: document.getElementById('mobile').value,  
-            pickup: document.getElementById('pickup').value,  
-            destination: document.getElementById('destination').value,  
-            passengers: document.getElementById('passengers').value,  
-            datetime: formattedDate,  
-            txn: txnId  
-        };  
+    const data = {  
+        name: document.getElementById('name').value,  
+        mobile: document.getElementById('mobile').value,  
+        pickup: document.getElementById('pickup').value,  
+        destination: document.getElementById('destination').value,  
+        passengers: document.getElementById('passengers').value,  
+        datetime: formattedDateTime, // এখানে ফরম্যাট করা ডেটা দেওয়া হলো 
+        txn: txnId  
+    };  
 
-        // হোয়াটসঅ্যাপ মেসেজ ফরম্যাট
-        const message = `*Smart Jatra* 🛺 *New Booking*\n\n` +
-                        `👤 *Name:* ${data.name}\n` +
-                        `📞 *Mobile:* ${data.mobile}\n` +
-                        `📍 *Pickup:* ${data.pickup}\n` +
-                        `🗺️ *GPS:* ${coords || 'Manual Entry'}\n` +
-                        `🏁 *Destination:* ${data.destination}\n` +
-                        `👥 *Passengers:* ${data.passengers}\n` +
-                        `📅 *Date & Time:* ${data.datetime}\n` +
-                        `💳 *Txn ID:* ${data.txn}\n\n` +
-                        `✅ *Note:* Distance confirmed > 4.5 KM`;
+    // মেসেজ স্ট্রাকচার
+    const message = `Smart Jatra 🛺 New Booking\n\n` +
+                    `Name: ${data.name}\n` +
+                    `Mobile: ${data.mobile}\n` +
+                    `Pickup Address: ${data.pickup}\n` +
+                    `GPS Location: ${coords || 'Manual Entry'}\n` +
+                    `Destination: ${data.destination}\n` +
+                    `Passengers: ${data.passengers}\n` +
+                    `Date & Time: ${data.datetime}\n` + // এখন এটি সঠিক ভাবে আসবে
+                    `Transaction ID: ${data.txn}\n\n` +
+                    `Note: Customer confirmed distance is > 4.5 KM`; 
 
-        const waUrl = `https://wa.me/917478578232?text=${encodeURIComponent(message)}`;
-        window.location.href = waUrl;
-    }
+    // WhatsApp Trigger
+    const waUrl = `https://wa.me/917478578232?text=${encodeURIComponent(message)}`;
+    window.location.href = waUrl;
+}
+
   
 </script>
 
 </body>  
 
 </html>  
+
 
 
 
