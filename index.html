@@ -432,14 +432,9 @@ input:focus, select:focus {
         }  
     }  
 
-    function finalSubmit() {  
-        const txnId = document.getElementById('txnId').value;  
-        if (txnId.length !== 12 || isNaN(txnId)) {  
-            alert("Please enter a valid 12-digit Transaction ID.");  
-            return;  
-        }  
-
-        const coords = document.getElementById('coords').value; // ম্যাপ লিংকটি নিন
+    // এই নতুন কোডটি বসান
+const rawDate = document.getElementById('datetime').value; // ইনপুট থেকে ডেট নিচ্ছি
+const formattedDate = rawDate.replace('T', ' '); // 'T' সরিয়ে স্পেস বসাচ্ছি যাতে সুন্দর দেখায়
 
 const data = {  
     name: document.getElementById('name').value,  
@@ -447,12 +442,21 @@ const data = {
     pickup: document.getElementById('pickup').value,  
     destination: document.getElementById('destination').value,  
     passengers: document.getElementById('passengers').value,  
-    datetime: document.getElementById('datetime').value,  
+    datetime: formattedDate, // ফরম্যাট করা ডেট ব্যবহার করছি
     txn: txnId  
 };  
 
-// মেসেজে "GPS Link" আলাদাভাবে যোগ করা হয়েছে
-const message = `Smart Jatra 🛺 New Booking\n\nName: ${data.name}\nMobile: ${data.mobile}\nPickup Address: ${data.pickup}\nGPS Location: ${coords || 'Manual Entry'}\nDestination: ${data.destination}\nPassengers: ${data.passengers}\nDate & Time: ${data.datetime}\nTransaction ID: ${data.txn}\n\nNote: Customer confirmed distance is > 4.5 KM`; 
+// মেসেজ ফরম্যাট আপডেট
+const message = `*Smart Jatra* 🛺 *New Booking*\n\n` +
+                `👤 *Name:* ${data.name}\n` +
+                `📞 *Mobile:* ${data.mobile}\n` +
+                `📍 *Pickup:* ${data.pickup}\n` +
+                `🗺️ *GPS:* ${coords || 'Manual Entry'}\n` +
+                `🏁 *Destination:* ${data.destination}\n` +
+                `👥 *Passengers:* ${data.passengers}\n` +
+                `📅 *Date & Time:* ${data.datetime}\n` +
+                `💳 *Txn ID:* ${data.txn}\n\n` +
+                `✅ *Note:* Distance confirmed > 4.5 KM`;
 
          // WhatsApp Trigger (PRIMARY & ONLY)
 const waUrl = `https://wa.me/917478578232?text=${encodeURIComponent(message)}`;
@@ -463,4 +467,5 @@ window.location.href = waUrl;
 </body>  
 
 </html>  
+
 
